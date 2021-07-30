@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {FlatList, StyleSheet, View} from 'react-native';
 import QuoteCard from "../components/QuoteCard";
@@ -8,17 +8,28 @@ import {loadQuotes} from "../api/quotesApi";
 const QuoteScreen = () => {
     const quotes = useSelector((state) => state['quotes'])
     const dispatch = useDispatch();
+    const [currentPage, setCurrentPage] = useState(0);
 
     useEffect(() => {
-        loadQuotes(dispatch);
+        loadQuotes(dispatch, currentPage);
     }, []);
-    
+
+    const loadMore=()=>{
+        console.log('well')
+        const nextPage=currentPage+1;
+        setCurrentPage(nextPage);
+        loadQuotes(dispatch,nextPage)
+    }
+
     return (
         <View style={style.container}>
             <FlatList
                 data={quotes}
-                keyExtractor={(item) => item.quote}
-                renderItem={({item}) => <QuoteCard text={item.quote} author={item.author}/>}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({item}) => <QuoteCard text={item.text} author={item.author} tags={item.tags}/>}
+                //onEndReachedThreshold={0.5}
+                //onEndReached={loadMore}
+                //TODO
             />
         </View>
     );

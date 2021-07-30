@@ -1,18 +1,19 @@
 import React from 'react';
 
 import {StyleSheet, View} from 'react-native';
-import {Button, Card, Text} from "react-native-paper";
+import {Button, Card, Chip} from "react-native-paper";
 import Quote from "./Quote";
 import {AntDesign, Feather} from '@expo/vector-icons';
 
 
-const QuoteCard = ({text, author}) => {
+const QuoteCard = ({text, author, tags}) => {
     return (
         <Card style={style.card}>
             <View style={style.cardContent}>
                 <Quote text={text} author={author}/>
             </View>
             <Card.Actions>
+                {tags.map((tag)=><Chip key={tag.id} mode={'outlined'}>{tag.name}</Chip>)}
 
                 <Button icon={({size, color}) => <Feather name="heart" size={size} color={color}/>}
                         onPress={() => console.log('Pressed')}

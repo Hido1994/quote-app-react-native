@@ -1,15 +1,16 @@
 import axios from "axios";
-import {setQuotes} from "../app/quotesSlice";
+import {addQuotes} from "../app/quotesSlice";
 
 const api = axios.create({
-    baseURL: 'https://api.quotable.io'
+    baseURL: 'http://localhost:8080'
 });
 
-export const loadQuotes = async (dispatch) => {
+export const loadQuotes = async (dispatch, page, limit) => {
     try{
-        const result = await api.get("/random")
+
+        const result = await api.get("/quote", { params: { page, limit } })
         const data = result.data
-        dispatch( setQuotes([{'quote': data.content, 'author': data.author}]) )
+        dispatch( addQuotes(data) )
     }
     catch(e){
         //TODO
