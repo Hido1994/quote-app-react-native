@@ -7,9 +7,12 @@ export const quotesSlice = createSlice({
         addQuotes: (state, action) => {
             state.push(...action.payload);
         },
+        setQuotes: (state, action) => {
+            return action.payload;
+        },
     },
 })
 
-export const {addQuotes} = quotesSlice.actions
+export const {addQuotes, setQuotes} = quotesSlice.actions
 
 export default quotesSlice.reducer

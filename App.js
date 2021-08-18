@@ -5,7 +5,8 @@ import {Provider as ReduxProvider} from 'react-redux';
 import {createStackNavigator} from '@react-navigation/stack';
 import QuoteScreen from "./src/screens/QuoteScreen";
 import store from "./src/app/store";
-
+import Status from "./src/components/Status";
+import { Entypo } from '@expo/vector-icons';
 const Stack = createStackNavigator();
 
 const theme = {
@@ -20,12 +21,15 @@ const theme = {
 };
 
 const App = () => {
+
     return (
         <ReduxProvider store={store}>
             <PaperProvider theme={theme}>
+                <Status />
                 <NavigationContainer theme={theme}>
                     <Stack.Navigator initialRouteName="Quote">
-                        <Stack.Screen name="Quote" component={QuoteScreen}/>
+                        <Stack.Screen name="Quote" component={QuoteScreen}
+                                      options={{ title:  <Entypo name="quote" size={24} color="black" />}}/>
                     </Stack.Navigator>
                 </NavigationContainer>
             </PaperProvider>

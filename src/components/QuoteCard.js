@@ -1,27 +1,35 @@
-import React from 'react';
+import React, {useRef} from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {Button, Card, Chip} from "react-native-paper";
-import Quote from "./Quote";
-import {AntDesign, Feather} from '@expo/vector-icons';
+import {MemoQuote} from "./Quote";
+import {AntDesign} from '@expo/vector-icons';
+import ViewShot, {releaseCapture} from "react-native-view-shot";
+import * as Sharing from 'expo-sharing';
 
+const QuoteCard = ({text, author, tags, selectedTag, setTagFilter}) => {
+    const viewShotRef = useRef();
 
-const QuoteCard = ({text, author, tags}) => {
+    const onShare = () => {
+        viewShotRef.current.capture().then(uri => {
+            Sharing.shareAsync(uri, {})
+                .then(() => {
+                    releaseCapture(uri);
+                })
+        })
+    };
+
     return (
         <Card style={style.card}>
-            <View style={style.cardContent}>
-                <Quote text={text} author={author}/>
-            </View>
+            <ViewShot ref={viewShotRef} style={style.cardContent}>
+                <MemoQuote text={text} author={author}/>
+            </ViewShot>
             <Card.Actions>
-                {tags.map((tag)=><Chip key={tag.id} mode={'outlined'}>{tag.name}</Chip>)}
-
-                <Button icon={({size, color}) => <Feather name="heart" size={size} color={color}/>}
-                        onPress={() => console.log('Pressed')}
-                        size={50}
-                >Like</Button>
-                <Button icon={({size, color}) =>
+                {tags.map((tag) => <Chip onPress={() => setTagFilter(tag.id)}
+                                         style={style.tag} key={tag.id} mode={'outlined'}>{tag.name}</Chip>)}
+                <Button style={{marginLeft: 'auto'}} icon={({size, color}) =>
                     <AntDesign name="sharealt" size={size} color={color}/>}
-                        onPress={() => console.log('Pressed')}
+                        onPress={onShare}
                 >Share</Button>
             </Card.Actions>
         </Card>
@@ -31,11 +39,15 @@ const QuoteCard = ({text, author, tags}) => {
 const style = StyleSheet.create({
     card: {
         margin: 10,
+        maxWidth: 700
     },
     cardContent: {
         paddingTop: 20,
         height: 500
+    },
+    tag: {
+        marginHorizontal: 3,
     }
 });
 
-export default QuoteCard;
+export const MemoQuoteCard = React.memo(QuoteCard);
