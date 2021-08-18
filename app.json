@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "quote-app-react-native",
+    "name": "Quotes",
     "slug": "quote-app-react-native",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -23,7 +23,10 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "at.dhinterndorfer.quotes",
+      "versionCode": 1,
+      "permissions": []
     },
     "web": {
       "favicon": "./assets/favicon.png"
