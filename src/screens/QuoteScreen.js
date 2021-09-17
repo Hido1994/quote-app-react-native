@@ -88,7 +88,7 @@ const QuoteScreen = ({navigation}) => {
                 ]}
             >
                 <View style={style.filters}>
-                    {tags.map((tag) => <Chip selected={tag.id === selectedTag} onPress={() => setTagFilter(tag.id)}
+                    {tags['childTags'].map((tag) => <Chip selected={tag.id === selectedTag} onPress={() => setTagFilter(tag.id)}
                                              style={style.tag} key={tag.id}
                                              mode={'outlined'}>{tag.name}</Chip>)}
                 </View>

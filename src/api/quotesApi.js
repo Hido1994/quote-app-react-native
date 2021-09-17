@@ -2,9 +2,10 @@ import axios from "axios";
 import {addQuotes} from "../app/quotesSlice";
 import {setError, setLoading} from "../app/statusSlice";
 import {setTags} from "../app/tagsSlice";
+import {BASE_URL} from "@env"
 
 const api = axios.create({
-    baseURL: 'http://v2202107152138157776.supersrv.de:5000'
+    baseURL: BASE_URL
 });
 
 export const loadQuotes = async (dispatch, page, limit, tag) => {
@@ -27,7 +28,7 @@ export const loadQuotes = async (dispatch, page, limit, tag) => {
 export const loadTags = async (dispatch) => {
     try {
         dispatch(setLoading(true))
-        const result = await api.get("/quote/tag")
+        const result = await api.get("/tag")
         const data = result.data
         dispatch(setTags(data))
         dispatch(setLoading(false))

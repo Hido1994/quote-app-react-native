@@ -1,11 +1,13 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
+    "start": "expo start --localhost",
+    "start-clear": "expo start --localhost -c",
+    "android": "expo start --android --localhost",
+    "ios": "expo start --ios --localhost",
+    "web": "expo start --web --localhost",
     "eject": "expo eject",
+    "start-production": "expo start --no-dev --localhost -a -c",
     "build-android": "expo build:android"
   },
   "dependencies": {
@@ -31,7 +33,8 @@
     "react-redux": "^7.2.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0"
+    "@babel/core": "^7.9.0",
+    "react-native-dotenv": "^3.2.0"
   },
   "private": true
 }
