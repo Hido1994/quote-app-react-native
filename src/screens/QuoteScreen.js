@@ -1,41 +1,40 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {FlatList, StyleSheet, View} from 'react-native';
+import {Dimensions, StyleSheet, View} from 'react-native';
 import {MemoQuoteCard} from "../components/QuoteCard";
 import {useDispatch, useSelector} from "react-redux";
 import {loadQuotes, loadTags} from "../api/quotesApi";
-import {ActivityIndicator, Banner, Chip, IconButton} from "react-native-paper";
+import {Banner, Chip, IconButton} from "react-native-paper";
+import Carousel from 'react-native-snap-carousel';
 import {setQuotes} from "../app/quotesSlice";
+import {StatusBar} from "expo-status-bar";
 
 const PAGE_LIMIT = 5
+
+const dimensions = Dimensions.get('window')
 
 const QuoteScreen = ({navigation}) => {
     const status = useSelector((state) => state['status'])
     const quotes = useSelector((state) => state['quotes'])
-    const tags = useSelector((state) => state['tags'])
     const dispatch = useDispatch();
     const [currentPage, setCurrentPage] = useState(0);
     const [moreData, setMoreData] = useState(true);
-    const [menuOpen, setMenuOpen] = useState(false);
     const [selectedTag, setSelectedTag] = useState(null);
+    const [currentIndex, setCurrentIndex] = useState(0);
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
+            headerShown: true,
+            headerTransparent: true,
             headerRight: () => (
                 <IconButton
                     icon="filter-variant"
                     size={30}
-                    onPress={() => setMenuOpen(current => {
-                        return !current;
-                    })}
+                    onPress={() =>navigation.navigate("Tag", {selectedTag, setTagFilter})}
                 />
             ),
         });
     }, [navigation]);
-
-    useEffect(() => {
-        loadTags(dispatch).then()
-    }, []);
 
     useEffect(() => {
         dispatch(setQuotes([]))
@@ -44,6 +43,12 @@ const QuoteScreen = ({navigation}) => {
             setMoreData(result)
         })
     }, [selectedTag]);
+
+    useEffect(() => {
+        if(quotes && currentIndex===(quotes.length-1) && moreData){
+            loadMore()
+        }
+    }, [currentIndex]);
 
     const loadMore = () => {
         if (!status['loading'] && moreData) {
@@ -55,7 +60,7 @@ const QuoteScreen = ({navigation}) => {
     }
 
     const renderItem = useCallback(
-        ({item}) => <MemoQuoteCard text={item.text} author={item.author} tags={item.tags}
+        ({item}) => <MemoQuoteCard text={item.text} origin={item.origin} tags={item.tags}
                                    setTagFilter={setTagFilter}/>,
         []
     );
@@ -71,38 +76,20 @@ const QuoteScreen = ({navigation}) => {
         } else {
             setSelectedTag(id)
         }
-        setMenuOpen(false)
     }
 
     return (
         <>
-            <Banner
-                visible={menuOpen}
-                actions={[
-                    {
-                        label: 'Hide',
-                        onPress: () => {
-                            setMenuOpen(false)
-                        },
-                    },
-                ]}
-            >
-                <View style={style.filters}>
-                    {tags['childTags'].map((tag) => <Chip selected={tag.id === selectedTag} onPress={() => setTagFilter(tag.id)}
-                                             style={style.tag} key={tag.id}
-                                             mode={'outlined'}>{tag.name}</Chip>)}
-                </View>
-            </Banner>
+            <StatusBar style="light" />
             <View style={style.container}>
-                <FlatList
+                {quotes && <Carousel
+                    layout={"default"}
                     data={quotes}
-                    keyExtractor={keyExtractor}
+                    sliderWidth={dimensions.width}
+                    itemWidth={dimensions.width}
                     renderItem={renderItem}
-                    onEndReachedThreshold={0.1}
-                    onEndReached={loadMore}
-                    ListFooterComponent={status['loading'] ?
-                        <View style={{padding: 10}}><ActivityIndicator animating={true}/></View> : null}
-                />
+                    onSnapToItem={index => setCurrentIndex(index)}/>
+                }
             </View>
         </>
     );

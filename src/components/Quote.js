@@ -13,14 +13,14 @@ const backgroundImages = [
 ]
 
 
-const Quote = ({text, author}) => {
+const Quote = ({text, origin}) => {
     const rand = Math.floor(Math.random()*backgroundImages.length)
     return (
         <ImageBackground source={backgroundImages[rand]}
                          style={style.container}>
             <View style={[style.container, style.overlay]}>
                 <Title style={style.text}>{text}</Title>
-                <Paragraph style={style.text}>- {author} -</Paragraph>
+                <Paragraph style={style.text}>- {origin} -</Paragraph>
             </View>
         </ImageBackground>
     );

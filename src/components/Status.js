@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {Portal, Snackbar} from "react-native-paper";
 import {useSelector} from "react-redux";
-import {loadQuotes} from "../api/quotesApi";
 
 
 const Status = () => {

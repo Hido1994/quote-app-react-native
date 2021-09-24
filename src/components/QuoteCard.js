@@ -1,13 +1,13 @@
 import React, {useRef} from 'react';
 
-import {StyleSheet} from 'react-native';
-import {Button, Card, Chip} from "react-native-paper";
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {MemoQuote} from "./Quote";
 import {AntDesign} from '@expo/vector-icons';
 import ViewShot, {releaseCapture} from "react-native-view-shot";
 import * as Sharing from 'expo-sharing';
+import {Button, Chip} from "react-native-paper";
 
-const QuoteCard = ({text, author, tags, selectedTag, setTagFilter}) => {
+const QuoteCard = ({text, origin, tags, selectedTag, setTagFilter}) => {
     const viewShotRef = useRef();
 
     const onShare = () => {
@@ -20,33 +20,45 @@ const QuoteCard = ({text, author, tags, selectedTag, setTagFilter}) => {
     };
 
     return (
-        <Card style={style.card}>
+        <>
             <ViewShot ref={viewShotRef} style={style.cardContent}>
-                <MemoQuote text={text} author={author}/>
+                <MemoQuote text={text} origin={origin}/>
             </ViewShot>
-            <Card.Actions>
+            <View style={style.actions}>
                 {tags.map((tag) => <Chip onPress={() => setTagFilter(tag.id)}
                                          style={style.tag} key={tag.id} mode={'outlined'}>{tag.name}</Chip>)}
-                <Button style={{marginLeft: 'auto'}} icon={({size, color}) =>
-                    <AntDesign name="sharealt" size={size} color={color}/>}
-                        onPress={onShare}
-                >Share</Button>
-            </Card.Actions>
-        </Card>
+                <TouchableOpacity
+                    onPress={onShare}>
+                    <AntDesign name="sharealt" size={40} color={'white'}/>
+                </TouchableOpacity>
+            </View>
+        </>
+        /*<Card.Actions>
+            {tags.map((tag) => <Chip onPress={() => setTagFilter(tag.id)}
+                                     style={style.tag} key={tag.id} mode={'outlined'}>{tag.name}</Chip>)}
+            <Button style={{marginLeft: 'auto'}} icon={({size, color}) =>
+                <AntDesign name="sharealt" size={size} color={color}/>}
+                    onPress={onShare}
+            >Share</Button>
+        </Card.Actions>*/
     );
 };
 
 const style = StyleSheet.create({
-    card: {
-        margin: 10,
-        maxWidth: 700
-    },
+    card: {},
     cardContent: {
-        paddingTop: 20,
-        height: 500
+        height: '100%'
     },
-    tag: {
-        marginHorizontal: 3,
+    actions: {
+        position: 'absolute',
+        width: '100%',
+        bottom: 100,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    tag:{
+        margin: 10,
+        backgroundColor: '#00000000'
     }
 });
 

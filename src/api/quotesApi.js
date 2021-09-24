@@ -30,7 +30,7 @@ export const loadTags = async (dispatch) => {
         dispatch(setLoading(true))
         const result = await api.get("/tag")
         const data = result.data
-        dispatch(setTags(data))
+        dispatch(setTags(data['childTags']))
         dispatch(setLoading(false))
     } catch (error) {
         dispatch(setError('Failed to retrieve quotes: ' + error.message))
